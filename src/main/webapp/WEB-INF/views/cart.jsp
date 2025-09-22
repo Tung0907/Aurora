@@ -6,16 +6,27 @@
   <tr><th>Sản phẩm</th><th>Giá</th><th>Số lượng</th><th>Thành tiền</th><th></th></tr>
   </thead>
   <tbody>
-  <c:forEach var="item" items="${cart}">
+  <c:forEach var="entry" items="${cart}">
+    <c:set var="item" value="${entry.value}" />
     <tr>
       <td>${item.product.name}</td>
       <td>${item.product.price}</td>
       <td>${item.quantity}</td>
       <td>${item.product.price * item.quantity}</td>
-      <td><a href="cart?action=remove&id=${item.product.id}" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a></td>
+      <td>
+        <a href="cart?action=remove&productId=${item.product.id}" class="btn btn-sm btn-danger">
+          <i class="fa fa-trash"></i>
+        </a>
+      </td>
     </tr>
   </c:forEach>
   </tbody>
+  <tfoot>
+  <tr>
+    <td colspan="3" class="text-end fw-bold">Tổng cộng</td>
+    <td colspan="2" class="fw-bold">${total}</td>
+  </tr>
+  </tfoot>
 </table>
 <a href="checkout" class="btn btn-success">Thanh toán</a>
 <%@ include file="layout/footer.jsp" %>

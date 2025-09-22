@@ -5,7 +5,7 @@
 
 <div class="container mt-4">
     <h2>Category List</h2>
-    <a href="category?action=new" class="btn btn-primary mb-3">Add New Category</a>
+    <a href="${pageContext.request.contextPath}/categories?action=new" class="btn btn-primary mb-3">Add New Category</a>
 
     <table class="table table-bordered">
         <thead>
@@ -21,8 +21,8 @@
                 <td>${c.id}</td>
                 <td>${c.name}</td>
                 <td>
-                    <a href="category?action=edit&id=${c.id}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="category?action=delete&id=${c.id}" class="btn btn-sm btn-danger"
+                    <a href="${pageContext.request.contextPath}/categories?action=edit&id=${c.id}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="${pageContext.request.contextPath}/categories?action=delete&id=${c.id}" class="btn btn-sm btn-danger"
                        onclick="return confirm('Are you sure?')">Delete</a>
                 </td>
             </tr>

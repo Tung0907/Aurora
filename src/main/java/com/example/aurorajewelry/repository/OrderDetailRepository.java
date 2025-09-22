@@ -54,16 +54,15 @@ public class OrderDetailRepository {
         return null;
     }
 
-    public void save(OrderDetail od) {
-        try {
-            String sql = "INSERT INTO OrderDetail(orderId,productId,quantity,price) VALUES(?,?,?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, od.getOrderId());
-            ps.setInt(2, od.getProductId());
-            ps.setInt(3, od.getQuantity());
-            ps.setDouble(4, od.getPrice());
+    public void save(OrderDetail d) {
+        String sql = "INSERT INTO OrderDetail(orderId, productId, quantity, price) VALUES (?,?,?,?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, d.getOrderId());
+            ps.setInt(2, d.getProductId());
+            ps.setInt(3, d.getQuantity());
+            ps.setDouble(4, d.getPrice());
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

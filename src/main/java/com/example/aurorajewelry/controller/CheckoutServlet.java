@@ -17,6 +17,10 @@ public class CheckoutServlet extends HttpServlet {
     public void init() {
         orderRepo = new OrderRepository();
     }
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        doPost(req, resp);
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

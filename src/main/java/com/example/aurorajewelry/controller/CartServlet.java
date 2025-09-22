@@ -37,7 +37,7 @@ public class CartServlet extends HttpServlet {
         Map<Integer, Item> cart = CartService.getCart(session);
 
         if ("add".equals(action)) {
-            int pid = Integer.parseInt(req.getParameter("productId"));
+            int pid = Integer.parseInt(req.getParameter("id"));
             int qty = 1;
             try { qty = Integer.parseInt(req.getParameter("quantity")); } catch (Exception ignored) {}
             Product p = productService.getById(pid);
@@ -45,12 +45,12 @@ public class CartServlet extends HttpServlet {
             if (it == null) cart.put(pid, new Item(p, qty));
             else it.quantity += qty;
         } else if ("update".equals(action)) {
-            int pid = Integer.parseInt(req.getParameter("productId"));
+            int pid = Integer.parseInt(req.getParameter("id"));
             int qty = Integer.parseInt(req.getParameter("quantity"));
             Item it = cart.get(pid);
             if (it != null) it.quantity = qty;
         } else if ("remove".equals(action)) {
-            int pid = Integer.parseInt(req.getParameter("productId"));
+            int pid = Integer.parseInt(req.getParameter("id"));
             cart.remove(pid);
         } else if ("clear".equals(action)) {
             cart.clear();

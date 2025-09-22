@@ -17,7 +17,6 @@ public class OrderDetail {
         this.price = price;
     }
 
-    // Getter & Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 

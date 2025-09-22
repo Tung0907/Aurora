@@ -6,112 +6,93 @@ import java.sql.*;
 import java.util.*;
 
 public class ProductRepository {
-    private Connection conn;
+    private final Connection conn;
 
     public ProductRepository() {
-        conn = DBConnection.getConnection();
+        this.conn = DBConnection.getConnection();
     }
 
     public List<Product> findAll() {
         List<Product> list = new ArrayList<>();
-        try {
-            String sql = "SELECT ProductId, ProductCode, Name, Material, Size, Price, Stock, IsActive, Image, CategoryId FROM Product WHERE IsActive = 1";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+        String sql = "SELECT id, name, description, price, stock, image, categoryId FROM Product";
+        try (Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 Product p = new Product();
-                p.setProductId(rs.getInt("ProductId"));
-                p.setProductCode(rs.getString("ProductCode"));
-                p.setName(rs.getString("Name"));
-                p.setMaterial(rs.getString("Material"));
-                p.setSize(rs.getString("Size"));
-                p.setPrice(rs.getDouble("Price"));
-                p.setStock(rs.getInt("Stock"));
-                p.setActive(rs.getBoolean("IsActive"));
-                p.setImage(rs.getString("Image"));
-                p.setCategoryId(rs.getInt("CategoryId"));
-
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getDouble("price"));
+                p.setStock(rs.getInt("stock"));
+                p.setImage(rs.getString("image"));
+                p.setCategoryId(rs.getInt("categoryId"));
                 list.add(p);
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return list;
     }
 
     public Product findById(int id) {
-        try {
-            String sql = "SELECT ProductId, ProductCode, Name, Material, Size, Price, Stock, IsActive, Image, CategoryId FROM Product WHERE ProductId = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "SELECT id, name, description, price, stock, image, categoryId FROM Product WHERE id = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Product p = new Product();
-                p.setProductId(rs.getInt("ProductId"));
-                p.setProductCode(rs.getString("ProductCode"));
-                p.setName(rs.getString("Name"));
-                p.setMaterial(rs.getString("Material"));
-                p.setSize(rs.getString("Size"));
-                p.setPrice(rs.getDouble("Price"));
-                p.setStock(rs.getInt("Stock"));
-                p.setActive(rs.getBoolean("IsActive"));
-                p.setImage(rs.getString("Image"));
-                p.setCategoryId(rs.getInt("CategoryId"));
-
-                return p;
+                return new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getInt("stock"),
+                        rs.getString("image"),
+                        rs.getInt("categoryId")
+                );
             }
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return null;
     }
 
     public void save(Product p) {
-        try {
-            String sql = "INSERT INTO Product(ProductCode, Name, Material, Size, Price, Stock, IsActive, Image, CategoryId) VALUES(?,?,?,?,?,?,?,?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, p.getProductCode());
-            ps.setString(2, p.getName());
-            ps.setString(3, p.getMaterial());
-            ps.setString(4, p.getSize());
-            ps.setDouble(5, p.getPrice());
-            ps.setInt(6, p.getStock());
-            ps.setBoolean(7, p.isActive());
-            ps.setString(8, p.getImage());
-            ps.setInt(9, p.getCategoryId());
+        String sql = "INSERT INTO Product(name, description, price, stock, image, categoryId) VALUES (?,?,?,?,?,?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getImage());
+            ps.setInt(6, p.getCategoryId());
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void update(Product p) {
-        try {
-            String sql = "UPDATE Product SET ProductCode=?, Name=?, Material=?, Size=?, Price=?, Stock=?, IsActive=?, Image=?, CategoryId=? WHERE ProductId=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, p.getProductCode());
-            ps.setString(2, p.getName());
-            ps.setString(3, p.getMaterial());
-            ps.setString(4, p.getSize());
-            ps.setDouble(5, p.getPrice());
-            ps.setInt(6, p.getStock());
-            ps.setBoolean(7, p.isActive());
-            ps.setString(8, p.getImage());
-            ps.setInt(9, p.getCategoryId());
-            ps.setInt(10, p.getProductId());
+        String sql = "UPDATE Product SET name=?, description=?, price=?, stock=?, image=?, categoryId=? WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, p.getName());
+            ps.setString(2, p.getDescription());
+            ps.setDouble(3, p.getPrice());
+            ps.setInt(4, p.getStock());
+            ps.setString(5, p.getImage());
+            ps.setInt(6, p.getCategoryId());
+            ps.setInt(7, p.getId());
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     public void delete(int id) {
-        try {
-            String sql = "DELETE FROM Product WHERE ProductId=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+        String sql = "DELETE FROM Product WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ps.executeUpdate();
-        } catch (Exception e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }

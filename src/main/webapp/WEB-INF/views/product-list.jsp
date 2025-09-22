@@ -1,4 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ include file="layout/header.jsp" %>
@@ -9,7 +8,7 @@
     <c:forEach var="p" items="${products}">
       <div class="col-md-3 mb-4">
         <div class="card shadow-sm h-100 border-0 rounded-3">
-          <img src="assets/images/${p.image}" class="card-img-top"
+          <img src="images/${p.image}" class="card-img-top"
                style="height:200px;object-fit:cover;border-radius:10px 10px 0 0;">
           <div class="card-body text-center">
             <h5 class="card-title">${p.name}</h5>

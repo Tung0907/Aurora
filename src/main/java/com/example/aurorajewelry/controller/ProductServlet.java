@@ -10,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import javax.servlet.http.Part;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +18,11 @@ import java.util.List;
 import java.util.UUID;
 
 @WebServlet(name = "ProductServlet", urlPatterns = {"/products"})
-@MultipartConfig(fileSizeThreshold = 1024 * 1024,     // 1MB
-        maxFileSize = 5 * 1024 * 1024,               // 5MB
-        maxRequestSize = 10 * 1024 * 1024)
+@MultipartConfig(
+        fileSizeThreshold = 1024 * 1024,  // 1MB
+        maxFileSize = 5 * 1024 * 1024,    // 5MB
+        maxRequestSize = 10 * 1024 * 1024
+)
 public class ProductServlet extends HttpServlet {
     private ProductService productService;
     private CategoryService categoryService;
@@ -55,6 +56,7 @@ public class ProductServlet extends HttpServlet {
                 break;
             default:
                 List<Product> list = productService.getAll();
+                System.out.println("Sản phẩm lấy được: " + list.size());
                 req.setAttribute("products", list);
                 req.getRequestDispatcher("/WEB-INF/views/admin/product-list.jsp").forward(req, resp);
                 break;
@@ -70,7 +72,7 @@ public class ProductServlet extends HttpServlet {
         if (i > 0) ext = submitted.substring(i);
         String filename = UUID.randomUUID().toString() + ext;
 
-        String imagesDir = req.getServletContext().getRealPath("/resources/images");
+        String imagesDir = getServletContext().getRealPath("") + "images";
         File dir = new File(imagesDir);
         if (!dir.exists()) dir.mkdirs();
 
@@ -85,13 +87,12 @@ public class ProductServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.setCharacterEncoding("UTF-8");
 
+        // Lấy dữ liệu từ form
         String idStr = req.getParameter("id");
         int id = (idStr == null || idStr.isEmpty()) ? 0 : Integer.parseInt(idStr);
 
-        String code = req.getParameter("productCode");
         String name = req.getParameter("name");
-        String material = req.getParameter("material");
-        String size = req.getParameter("size");
+        String description = req.getParameter("description");
 
         double price = 0;
         try { price = Double.parseDouble(req.getParameter("price")); } catch (Exception ignored) {}
@@ -99,34 +100,32 @@ public class ProductServlet extends HttpServlet {
         int stock = 0;
         try { stock = Integer.parseInt(req.getParameter("stock")); } catch (Exception ignored) {}
 
-        boolean active = "on".equals(req.getParameter("active"));
-
         int catId = 0;
         try { catId = Integer.parseInt(req.getParameter("categoryId")); } catch (Exception ignored) {}
 
-        // xử lý file upload
-        Part filePart = req.getPart("imageFile"); // ⚠️ input name trong form phải là "imageFile"
+        // Xử lý upload ảnh
+        Part filePart = req.getPart("imageFile");
         String uploadedFileName = saveUploadedFile(filePart, req);
+        String imageParam = req.getParameter("image");
+        String finalImage = (uploadedFileName != null) ? uploadedFileName :
+                (imageParam != null ? imageParam : null);
 
-        String imageParam = req.getParameter("image"); // fallback nếu nhập URL
-        String finalImage = (uploadedFileName != null) ? uploadedFileName : (imageParam != null ? imageParam : null);
-
-        // Tạo product mới theo model 10 trường
+        // Tạo Product đúng với model
         Product p = new Product(
                 id,
-                code,
                 name,
-                material,
-                size,
+                description,
                 price,
                 stock,
-                active,
                 finalImage,
                 catId
         );
 
-        if (id == 0) productService.add(p);
-        else productService.update(p);
+        if (id == 0) {
+            productService.add(p);
+        } else {
+            productService.update(p);
+        }
 
         resp.sendRedirect(req.getContextPath() + "/products");
     }

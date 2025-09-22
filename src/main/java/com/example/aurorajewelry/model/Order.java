@@ -4,16 +4,13 @@ import java.util.Date;
 
 public class Order {
     private int id;
-    private Integer customerId; // wrapper cho phép null
+    private Integer customerId; // dùng Integer thay cho int
     private Date orderDate;
     private double total;
-    private int orderId;
-    public int getOrderId() { return orderId; }
-    public void setOrderId(int orderId) { this.orderId = orderId; }
 
     public Order() {}
 
-    public Order(int id, Integer customerId, Date orderDate, double total) {
+    public Order(int id, int customerId, Date orderDate, double total) {
         this.id = id;
         this.customerId = customerId;
         this.orderDate = orderDate;
@@ -31,4 +28,5 @@ public class Order {
 
     public double getTotal() { return total; }
     public void setTotal(double total) { this.total = total; }
+
 }

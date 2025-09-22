@@ -36,7 +36,7 @@
             <p class="card-text text-muted">
               <fmt:formatNumber value="${p.price}" type="number" groupingUsed="true"/> VNĐ
             </p>
-            <a href="${pageContext.request.contextPath}/cart?action=add&id=${p.productId}"
+            <a href="${pageContext.request.contextPath}/cart?action=add&id=${p.id}"
                class="btn btn-primary">
               <i class="fa fa-cart-plus"></i> Thêm vào giỏ
             </a>

@@ -14,10 +14,10 @@ public class CategoryRepository {
 
     public List<Category> findAll() {
         List<Category> list = new ArrayList<>();
-        try {
-            String sql = "SELECT * FROM Category";
-            Statement st = conn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
+        String sql = "SELECT * FROM Category";
+        try (Connection conn = DBConnection.getConnection();
+             Statement st = conn.createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
             while (rs.next()) {
                 list.add(new Category(rs.getInt("id"), rs.getString("name")));
             }
@@ -26,6 +26,7 @@ public class CategoryRepository {
         }
         return list;
     }
+
 
     public Category findById(int id) {
         try {
