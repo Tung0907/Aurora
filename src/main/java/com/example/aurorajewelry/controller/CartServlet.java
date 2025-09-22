@@ -21,38 +21,38 @@ public class CartServlet extends HttpServlet {
         productService = new ProductServiceImpl();
     }
 
-    // GET: hiển thị cart hoặc hỗ trợ link add via GET
+    // GET: hiển thị cart hoặc add via GET
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
         Map<Integer, Item> cart = CartService.getCart(session);
 
-        // Hỗ trợ add bằng GET (link)
         if ("add".equals(action)) {
             String pidStr = req.getParameter("productId");
-            if (pidStr == null) pidStr = req.getParameter("id"); // legacy support
             if (pidStr != null) {
                 try {
                     int pid = Integer.parseInt(pidStr);
                     int qty = 1;
-                    // optional quantity param
                     try { qty = Integer.parseInt(req.getParameter("quantity")); } catch (Exception ignored) {}
                     Product p = productService.getById(pid);
                     if (p != null) {
                         Item it = cart.get(pid);
-                        if (it == null) cart.put(pid, new Item(p, qty));
-                        else it.quantity += qty;
+                        if (it == null) {
+                            cart.put(pid, new Item(p, qty));
+                        } else {
+                            it.setQuantity(it.getQuantity() + qty);
+                        }
                     }
                 } catch (NumberFormatException ignored) {}
             }
-            // cập nhật tổng vào session
+            // Lưu lại vào session
+            session.setAttribute("cart", cart);
             session.setAttribute("cartTotal", CartService.getTotal(cart));
             resp.sendRedirect(req.getContextPath() + "/cart");
             return;
         }
 
-        // hiển thị giỏ
         req.setAttribute("cart", cart);
         req.setAttribute("total", CartService.getTotal(cart));
         req.getRequestDispatcher("/WEB-INF/views/cart.jsp").forward(req, resp);
@@ -67,7 +67,6 @@ public class CartServlet extends HttpServlet {
 
         if ("add".equals(action)) {
             String pidStr = req.getParameter("productId");
-            if (pidStr == null) pidStr = req.getParameter("id");
             if (pidStr != null) {
                 try {
                     int pid = Integer.parseInt(pidStr);
@@ -76,33 +75,34 @@ public class CartServlet extends HttpServlet {
                     Product p = productService.getById(pid);
                     if (p != null) {
                         Item it = cart.get(pid);
-                        if (it == null) cart.put(pid, new Item(p, qty));
-                        else it.quantity += qty;
+                        if (it == null) {
+                            cart.put(pid, new Item(p, qty));
+                        } else {
+                            it.setQuantity(it.getQuantity() + qty);
+                        }
                     }
                 } catch (NumberFormatException ignored) {}
             }
         } else if ("update".equals(action)) {
-            String pidStr = req.getParameter("productId");
-            String qtyStr = req.getParameter("quantity");
             try {
-                int pid = Integer.parseInt(pidStr);
-                int qty = Integer.parseInt(qtyStr);
+                int pid = Integer.parseInt(req.getParameter("productId"));
+                int qty = Integer.parseInt(req.getParameter("quantity"));
                 Item it = cart.get(pid);
-                if (it != null) it.quantity = qty;
+                if (it != null) it.setQuantity(qty);
             } catch (Exception ignored) {}
         } else if ("remove".equals(action)) {
-            String pidStr = req.getParameter("productId");
-            if (pidStr == null) pidStr = req.getParameter("id");
             try {
-                int pid = Integer.parseInt(pidStr);
+                int pid = Integer.parseInt(req.getParameter("productId"));
                 cart.remove(pid);
             } catch (Exception ignored) {}
         } else if ("clear".equals(action)) {
             cart.clear();
         }
 
-        // cập nhật tổng vào session
+        // Lưu lại vào session
+        session.setAttribute("cart", cart);
         session.setAttribute("cartTotal", CartService.getTotal(cart));
+
         resp.sendRedirect(req.getContextPath() + "/cart");
     }
 }

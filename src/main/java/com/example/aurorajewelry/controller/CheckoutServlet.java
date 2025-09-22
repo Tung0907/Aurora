@@ -65,8 +65,14 @@ public class CheckoutServlet extends HttpServlet {
 
         // lưu chi tiết
         for (Item it : cart.values()) {
-            orderDetailRepo.save(orderId, it.product.getId(), it.quantity, it.product.getPrice());
+            orderDetailRepo.save(
+                    orderId,
+                    it.getProduct().getId(),
+                    it.getQuantity(),
+                    it.getProduct().getPrice()
+            );
         }
+
 
         // clear cart
         cart.clear();

@@ -88,6 +88,26 @@ public class OrderRepository {
             e.printStackTrace();
         }
     }
+    public List<Order> findByCustomerId(int customerId) {
+        List<Order> list = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE customer_id = ? ORDER BY order_date DESC";
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, customerId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Order o = new Order();
+                o.setId(rs.getInt("id"));
+                o.setCustomerId(rs.getInt("customer_id"));
+                o.setOrderDate(rs.getTimestamp("order_date"));
+                o.setTotal(rs.getDouble("total"));
+                list.add(o);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
 
     public void delete(int id) {
         try {
