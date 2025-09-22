@@ -54,29 +54,26 @@ public class OrderRepository {
 
     // trả về generated id (SCOPE_IDENTITY)
     public int save(Order order) {
-        String sql = "INSERT INTO [Order] (customerId, orderDate, total) VALUES (?, ?, ?)";
-        try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            ps.setInt(1, order.getCustomerId());
+        try {
+            String sql = "INSERT INTO [Order](customerId, orderDate, total) VALUES(?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            if (order.getCustomerId() != null) ps.setInt(1, order.getCustomerId()); else ps.setNull(1, Types.INTEGER);
             ps.setTimestamp(2, new java.sql.Timestamp(order.getOrderDate().getTime()));
-            ps.setBigDecimal(3, BigDecimal.valueOf(order.getTotal()));
+            ps.setDouble(3, order.getTotal());
             ps.executeUpdate();
-
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    int id = rs.getInt(1);
-                    order.setId(id);        // gán lại vào model
-                    return id;              // ✅ trả về id
-                }
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int id = rs.getInt(1);
+                rs.close();
+                ps.close();
+                return id;
             }
-        } catch (SQLException e) {
+            ps.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+        return -1;
     }
-
-
-
     public void update(Order o) {
         try {
             String sql = "UPDATE [Order] SET customerId=?, orderDate=?, total=? WHERE id=?";

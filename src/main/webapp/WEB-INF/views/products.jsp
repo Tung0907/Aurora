@@ -9,7 +9,8 @@
         <div class="card-body">
           <h5 class="card-title">${p.name}</h5>
           <p class="card-text text-danger fw-bold">${p.price} VNĐ</p>
-          <a href="cart?action=add&id=${p.id}" class="btn btn-sm btn-primary">
+          <a href="${pageContext.request.contextPath}/cart?action=add&productId=${p.id}"
+             class="btn btn-sm btn-primary">
             <i class="fa fa-cart-plus"></i> Thêm giỏ hàng
           </a>
         </div>
