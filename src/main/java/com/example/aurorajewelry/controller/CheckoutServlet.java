@@ -62,13 +62,15 @@ public class CheckoutServlet extends HttpServlet {
         for (Map.Entry<Integer, Item> en : cart.entrySet()) {
             Product p = en.getValue().product;
             int qty = en.getValue().quantity;
+
             OrderDetail od = new OrderDetail();
             od.setOrderId(orderId);
-            od.setProductId(p.getId());
+            od.setProductId(p.getProductId()); // ✅ đúng getter
             od.setQuantity(qty);
             od.setPrice(p.getPrice());
-            orderDetailRepo.save(od); // your repository has save/insert method
-            // optional: decrease stock via ProductRepository (you can add if desired)
+
+            orderDetailRepo.save(od);
+            // optional: giảm số lượng tồn kho nếu muốn
         }
 
         // clear cart

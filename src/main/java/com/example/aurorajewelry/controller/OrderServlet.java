@@ -39,14 +39,16 @@ public class OrderServlet extends HttpServlet {
             total += p.getPrice() * e.getValue();
         }
 
+        // Tạo đơn hàng
         Order order = new Order(0, customer.getId(), new Date(), total);
-        orderRepo.save(order);
+        orderRepo.save(order);  // repo đã tự set id cho order
 
         for (Map.Entry<Integer, Integer> e : cart.entrySet()) {
             Product p = productRepo.findById(e.getKey());
             OrderDetail d = new OrderDetail(0, order.getId(), p.getId(), e.getValue(), p.getPrice());
             detailRepo.save(d);
         }
+
 
         session.removeAttribute("cart");
         resp.sendRedirect("home");
