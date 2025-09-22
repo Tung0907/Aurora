@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="layout/header.jsp" %>
 <h2 class="mb-4 text-gradient">💳 Thanh toán</h2>
 <form action="checkout" method="post" class="row g-3">

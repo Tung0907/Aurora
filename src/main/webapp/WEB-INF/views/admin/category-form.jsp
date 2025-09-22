@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
 <div class="card shadow p-4">
   <h3 class="text-gradient mb-3"><c:if test="${empty category}">Thêm</c:if><c:if test="${not empty category}">Sửa</c:if> danh mục</h3>

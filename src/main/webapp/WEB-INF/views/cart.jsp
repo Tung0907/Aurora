@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="layout/header.jsp" %>
 <h2 class="mb-4 text-gradient"><i class="fa fa-cart-shopping"></i> Giỏ hàng</h2>
 <table class="table table-bordered shadow">

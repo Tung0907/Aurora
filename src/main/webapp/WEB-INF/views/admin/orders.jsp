@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
 <h2 class="text-gradient mb-3">🧾 Quản lý đơn hàng</h2>
 <table class="table table-bordered shadow">

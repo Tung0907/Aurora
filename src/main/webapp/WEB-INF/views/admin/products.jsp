@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
 <div class="d-flex justify-content-between mb-3">
     <h2 class="text-gradient">📦 Quản lý sản phẩm</h2>

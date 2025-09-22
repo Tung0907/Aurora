@@ -40,7 +40,7 @@ public class CategoryServlet extends HttpServlet {
             default:
                 List<Category> list = repo.findAll();
                 req.setAttribute("categories", list);
-                req.getRequestDispatcher("/WEB-INF/views/category-list.jsp").forward(req, resp);
+                req.getRequestDispatcher("/WEB-INF/views/admin/category-list.jsp").forward(req, resp);
                 break;
         }
     }
