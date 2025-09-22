@@ -4,13 +4,13 @@ import java.util.Date;
 
 public class Order {
     private int id;
-    private int customerId;
+    private Integer customerId; // đổi từ int -> Integer
     private Date orderDate;
     private double total;
 
     public Order() {}
 
-    public Order(int id, int customerId, Date orderDate, double total) {
+    public Order(int id, Integer customerId, Date orderDate, double total) {
         this.id = id;
         this.customerId = customerId;
         this.orderDate = orderDate;
@@ -21,8 +21,8 @@ public class Order {
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
-    public int getCustomerId() { return customerId; }
-    public void setCustomerId(int customerId) { this.customerId = customerId; }
+    public Integer getCustomerId() { return customerId; }
+    public void setCustomerId(Integer customerId) { this.customerId = customerId; }
 
     public Date getOrderDate() { return orderDate; }
     public void setOrderDate(Date orderDate) { this.orderDate = orderDate; }

@@ -15,20 +15,16 @@ import java.util.Map;
 @WebServlet(name = "CartServlet", urlPatterns = {"/cart"})
 public class CartServlet extends HttpServlet {
     private ProductService productService;
+
     @Override
-    public void init() { productService = new ProductServiceImpl(); }
+    public void init() {
+        productService = new ProductServiceImpl();
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
         HttpSession session = req.getSession();
         Map<Integer, Item> cart = CartService.getCart(session);
-
-        if ("clear".equals(action)) {
-            cart.clear();
-            resp.sendRedirect(req.getContextPath() + "/cart");
-            return;
-        }
         req.setAttribute("cart", cart);
         req.setAttribute("total", CartService.getTotal(cart));
         req.getRequestDispatcher("/WEB-INF/views/cart.jsp").forward(req, resp);
@@ -36,27 +32,30 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // actions: add, update, remove
         String action = req.getParameter("action");
         HttpSession session = req.getSession();
         Map<Integer, Item> cart = CartService.getCart(session);
 
         if ("add".equals(action)) {
-            int productId = Integer.parseInt(req.getParameter("productId"));
-            int qty = Integer.parseInt(req.getParameter("quantity"));
-            Product p = productService.getById(productId);
-            Item it = cart.get(productId);
-            if (it == null) cart.put(productId, new Item(p, qty));
+            int pid = Integer.parseInt(req.getParameter("productId"));
+            int qty = 1;
+            try { qty = Integer.parseInt(req.getParameter("quantity")); } catch (Exception ignored) {}
+            Product p = productService.getById(pid);
+            Item it = cart.get(pid);
+            if (it == null) cart.put(pid, new Item(p, qty));
             else it.quantity += qty;
         } else if ("update".equals(action)) {
-            int productId = Integer.parseInt(req.getParameter("productId"));
+            int pid = Integer.parseInt(req.getParameter("productId"));
             int qty = Integer.parseInt(req.getParameter("quantity"));
-            Item it = cart.get(productId);
+            Item it = cart.get(pid);
             if (it != null) it.quantity = qty;
         } else if ("remove".equals(action)) {
-            int productId = Integer.parseInt(req.getParameter("productId"));
-            cart.remove(productId);
+            int pid = Integer.parseInt(req.getParameter("productId"));
+            cart.remove(pid);
+        } else if ("clear".equals(action)) {
+            cart.clear();
         }
+
         resp.sendRedirect(req.getContextPath() + "/cart");
     }
 }

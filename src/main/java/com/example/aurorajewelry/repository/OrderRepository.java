@@ -51,17 +51,24 @@ public class OrderRepository {
         return null;
     }
 
-    public void save(Order o) {
-        try {
-            String sql = "INSERT INTO [Order](customerId,orderDate,total) VALUES(?,?,?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, o.getCustomerId());
+    public int save(Order o) {
+        int generatedId = -1;
+        String sql = "INSERT INTO [Order] (customerId, orderDate, total) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setInt(1, o.getCustomerId()); // luôn có customerId
             ps.setDate(2, new java.sql.Date(o.getOrderDate().getTime()));
             ps.setDouble(3, o.getTotal());
             ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                generatedId = rs.getInt(1);
+            }
+            rs.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return generatedId;
     }
 
     public void update(Order o) {
