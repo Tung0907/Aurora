@@ -40,14 +40,14 @@ public class OrderServlet extends HttpServlet {
         }
 
         // Tạo đơn hàng
-        Order order = new Order(0, customer.getId(), new Date(), total);
-        orderRepo.save(order);  // repo đã tự set id cho order
-
+        Order order = new Order(0, customer.getCustomerId(), new Date(), total);
+        orderRepo.save(order);
         for (Map.Entry<Integer, Integer> e : cart.entrySet()) {
             Product p = productRepo.findById(e.getKey());
-            OrderDetail d = new OrderDetail(0, order.getId(), p.getProductId(), e.getValue(), p.getPrice());
+            OrderDetail d = new OrderDetail(0, order.getOrderId(), p.getProductId(), e.getValue(), p.getPrice());
             detailRepo.save(d);
         }
+
 
 
         session.removeAttribute("cart");

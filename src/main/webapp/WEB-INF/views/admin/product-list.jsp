@@ -11,21 +11,20 @@
         </thead>
         <tbody>
         <c:forEach var="p" items="${products}">
-            <img src="${pageContext.request.contextPath}/images/${product.image}" alt="${product.name}" style="max-width:150px;">
             <tr>
                 <td>
                     <c:if test="${not empty p.image}">
                         <img src="${pageContext.request.contextPath}/resources/images/${p.image}" alt="img" style="width:80px;height:80px;object-fit:cover"/>
                     </c:if>
                 </td>
-                <td>${p.id}</td>
+                <td>${p.productId}</td>
                 <td>${p.name}</td>
                 <td>${p.price}</td>
                 <td>${p.stock}</td>
                 <td>${p.categoryId}</td>
                 <td>
-                    <a class="btn btn-sm btn-warning" href="${pageContext.request.contextPath}/products?action=edit&id=${p.id}">Edit</a>
-                    <a class="btn btn-sm btn-danger" href="${pageContext.request.contextPath}/products?action=delete&id=${p.id}" onclick="return confirm('Delete?')">Delete</a>
+                    <a class="btn btn-sm btn-warning" href="${pageContext.request.contextPath}/products?action=edit&id=${p.productId}">Edit</a>
+                    <a class="btn btn-sm btn-danger" href="${pageContext.request.contextPath}/products?action=delete&id=${p.productId}" onclick="return confirm('Delete?')">Delete</a>
                 </td>
             </tr>
         </c:forEach>

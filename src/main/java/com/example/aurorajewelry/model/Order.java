@@ -7,6 +7,9 @@ public class Order {
     private Integer customerId; // wrapper cho phép null
     private Date orderDate;
     private double total;
+    private int orderId;
+    public int getOrderId() { return orderId; }
+    public void setOrderId(int orderId) { this.orderId = orderId; }
 
     public Order() {}
 

@@ -5,6 +5,8 @@ public class Customer {
     private String name;
     private String email;
     private String password;
+    private int customerId;
+    public int getCustomerId() { return customerId; }
 
     public Customer() {}
 
