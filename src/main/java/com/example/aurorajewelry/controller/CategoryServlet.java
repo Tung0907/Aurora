@@ -2,7 +2,7 @@ package com.example.aurorajewelry.controller;
 
 import com.example.aurorajewelry.model.Category;
 import com.example.aurorajewelry.service.CategoryService;
-import com.example.aurorajewelry.service.CategoryServiceImpl;
+import com.example.aurorajewelry.service.impl.CategoryServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

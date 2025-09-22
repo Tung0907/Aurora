@@ -1,7 +1,9 @@
-package com.example.aurorajewelry.service;
+package com.example.aurorajewelry.service.impl;
 
 import com.example.aurorajewelry.model.Category;
 import com.example.aurorajewelry.repository.CategoryRepository;
+import com.example.aurorajewelry.service.CategoryService;
+
 import java.util.List;
 
 public class CategoryServiceImpl implements CategoryService {

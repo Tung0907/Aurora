@@ -1,7 +1,9 @@
-package com.example.aurorajewelry.service;
+package com.example.aurorajewelry.service.impl;
 
 import com.example.aurorajewelry.model.Product;
 import com.example.aurorajewelry.repository.ProductRepository;
+import com.example.aurorajewelry.service.ProductService;
+
 import java.util.List;
 
 public class ProductServiceImpl implements ProductService {
