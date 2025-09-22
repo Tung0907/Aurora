@@ -1,7 +1,8 @@
 package com.example.aurorajewelry.controller;
 
 import com.example.aurorajewelry.model.Product;
-import com.example.aurorajewelry.repository.ProductRepository;
+import com.example.aurorajewelry.service.ProductService;
+import com.example.aurorajewelry.service.ProductServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,11 +12,11 @@ import java.util.List;
 
 @WebServlet(name = "ProductServlet", urlPatterns = {"/products"})
 public class ProductServlet extends HttpServlet {
-    private ProductRepository repo;
+    private ProductService productService;
 
     @Override
     public void init() {
-        repo = new ProductRepository();
+        productService = new ProductServiceImpl();
     }
 
     @Override
@@ -27,23 +28,25 @@ public class ProductServlet extends HttpServlet {
             case "new":
                 req.getRequestDispatcher("/WEB-INF/views/product-form.jsp").forward(req, resp);
                 break;
+
             case "edit":
                 int id = Integer.parseInt(req.getParameter("id"));
-                Product p = repo.findById(id);
+                Product p = productService.getById(id);
                 req.setAttribute("product", p);
                 req.getRequestDispatcher("/WEB-INF/views/product-form.jsp").forward(req, resp);
                 break;
+
             case "delete":
-                repo.delete(Integer.parseInt(req.getParameter("id")));
+                productService.delete(Integer.parseInt(req.getParameter("id")));
                 resp.sendRedirect("products");
                 break;
-            default:
-                List<Product> list = repo.findAll();
+
+            default: // list
+                List<Product> list = productService.getAll();
                 req.setAttribute("products", list);
                 req.getRequestDispatcher("/WEB-INF/views/product-list.jsp").forward(req, resp);
                 break;
         }
-
     }
 
     @Override
@@ -57,15 +60,16 @@ public class ProductServlet extends HttpServlet {
         int catId = Integer.parseInt(req.getParameter("categoryId"));
 
         Product p = new Product(
-                id == null || id.isEmpty() ? 0 : Integer.parseInt(id),
+                (id == null || id.isEmpty()) ? 0 : Integer.parseInt(id),
                 name, desc, price, stock, image, catId
         );
 
         if (id == null || id.isEmpty()) {
-            repo.save(p);
+            productService.add(p);
         } else {
-            repo.update(p);
+            productService.update(p);
         }
+
         resp.sendRedirect("products");
     }
 }

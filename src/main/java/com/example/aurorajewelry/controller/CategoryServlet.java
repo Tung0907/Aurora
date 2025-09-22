@@ -1,7 +1,8 @@
 package com.example.aurorajewelry.controller;
 
 import com.example.aurorajewelry.model.Category;
-import com.example.aurorajewelry.repository.CategoryRepository;
+import com.example.aurorajewelry.service.CategoryService;
+import com.example.aurorajewelry.service.CategoryServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,11 +12,11 @@ import java.util.List;
 
 @WebServlet(name = "CategoryServlet", urlPatterns = {"/categories"})
 public class CategoryServlet extends HttpServlet {
-    private CategoryRepository repo;
+    private CategoryService service;
 
     @Override
     public void init() {
-        repo = new CategoryRepository();
+        service = new CategoryServiceImpl();
     }
 
     @Override
@@ -29,16 +30,16 @@ public class CategoryServlet extends HttpServlet {
                 break;
             case "edit":
                 int id = Integer.parseInt(req.getParameter("id"));
-                Category c = repo.findById(id);
+                Category c = service.getById(id);
                 req.setAttribute("category", c);
                 req.getRequestDispatcher("/WEB-INF/views/category-form.jsp").forward(req, resp);
                 break;
             case "delete":
-                repo.delete(Integer.parseInt(req.getParameter("id")));
+                service.delete(Integer.parseInt(req.getParameter("id")));
                 resp.sendRedirect("categories");
                 break;
             default:
-                List<Category> list = repo.findAll();
+                List<Category> list = service.getAll();
                 req.setAttribute("categories", list);
                 req.getRequestDispatcher("/WEB-INF/views/admin/category-list.jsp").forward(req, resp);
                 break;
@@ -51,10 +52,11 @@ public class CategoryServlet extends HttpServlet {
         String name = req.getParameter("name");
 
         Category c = new Category(id == null || id.isEmpty() ? 0 : Integer.parseInt(id), name);
+
         if (id == null || id.isEmpty()) {
-            repo.save(c);
+            service.add(c);
         } else {
-            repo.update(c);
+            service.update(c);
         }
         resp.sendRedirect("categories");
     }
