@@ -6,7 +6,8 @@ import java.util.List;
 public interface CustomerService {
     List<Customer> getAll();
     Customer getById(int id);
-    void save(Customer customer);
-    void update(Customer customer);
+    Customer findByEmail(String email);
+    void add(Customer c);
+    void update(Customer c);
     void delete(int id);
 }

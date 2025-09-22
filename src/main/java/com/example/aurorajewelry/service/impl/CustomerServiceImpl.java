@@ -7,34 +7,18 @@ import com.example.aurorajewelry.service.CustomerService;
 import java.util.List;
 
 public class CustomerServiceImpl implements CustomerService {
-    private final CustomerRepository customerRepository;
-
-    public CustomerServiceImpl() {
-        this.customerRepository = new CustomerRepository();
+    private final CustomerRepository repo;
+    public CustomerServiceImpl() { this.repo = new CustomerRepository(); }
+    @Override public List<Customer> getAll() { return repo.findAll(); }
+    @Override public Customer getById(int id) { return repo.findById(id); }
+    @Override public Customer findByEmail(String email) {
+        // your repo doesn't have findByEmail — if it doesn't, add method; else call it
+        // Fallback: load all and find
+        List<Customer> list = repo.findAll();
+        for (Customer c : list) if (email != null && email.equals(c.getEmail())) return c;
+        return null;
     }
-
-    @Override
-    public List<Customer> getAll() {
-        return customerRepository.findAll();
-    }
-
-    @Override
-    public Customer getById(int id) {
-        return customerRepository.findById(id);
-    }
-
-    @Override
-    public void save(Customer customer) {
-        customerRepository.save(customer);
-    }
-
-    @Override
-    public void update(Customer customer) {
-        customerRepository.update(customer);
-    }
-
-    @Override
-    public void delete(int id) {
-        customerRepository.delete(id);
-    }
+    @Override public void add(Customer c) { repo.save(c); }
+    @Override public void update(Customer c) { repo.update(c); }
+    @Override public void delete(int id) { repo.delete(id); }
 }

@@ -26,17 +26,17 @@ public class CategoryServlet extends HttpServlet {
 
         switch (action) {
             case "new":
-                req.getRequestDispatcher("/WEB-INF/views/category-form.jsp").forward(req, resp);
+                req.getRequestDispatcher("/WEB-INF/views/admin/category-form.jsp").forward(req, resp);
                 break;
             case "edit":
                 int id = Integer.parseInt(req.getParameter("id"));
                 Category c = service.getById(id);
                 req.setAttribute("category", c);
-                req.getRequestDispatcher("/WEB-INF/views/category-form.jsp").forward(req, resp);
+                req.getRequestDispatcher("/WEB-INF/views/admin/category-form.jsp").forward(req, resp);
                 break;
             case "delete":
                 service.delete(Integer.parseInt(req.getParameter("id")));
-                resp.sendRedirect("categories");
+                resp.sendRedirect(req.getContextPath() + "/categories");
                 break;
             default:
                 List<Category> list = service.getAll();
@@ -48,16 +48,14 @@ public class CategoryServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
         String id = req.getParameter("id");
         String name = req.getParameter("name");
 
         Category c = new Category(id == null || id.isEmpty() ? 0 : Integer.parseInt(id), name);
+        if (id == null || id.isEmpty()) service.add(c);
+        else service.update(c);
 
-        if (id == null || id.isEmpty()) {
-            service.add(c);
-        } else {
-            service.update(c);
-        }
-        resp.sendRedirect("categories");
+        resp.sendRedirect(req.getContextPath() + "/categories");
     }
 }
