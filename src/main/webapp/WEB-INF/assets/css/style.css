@@ -1,0 +1,22 @@
+body {
+    background: #f8f9fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+.text-gradient {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.card {
+    border-radius: 15px;
+}
+.btn-primary {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+    border: none;
+}
+.btn-primary:hover {
+    opacity: 0.9;
+}
+.navbar {
+    background: linear-gradient(90deg, #6a11cb, #2575fc);
+}
