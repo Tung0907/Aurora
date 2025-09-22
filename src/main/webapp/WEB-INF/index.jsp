@@ -1,2 +1,3 @@
-<%@ page contentType="text/html;charset=UTF-8" %>
-<jsp:forward page="views/home.jsp"/>
+<%
+    response.sendRedirect(request.getContextPath() + "/auth?action=login");
+%>

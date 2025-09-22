@@ -10,7 +10,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(name = "CategoryServlet", urlPatterns = {"/categories"})
+@WebServlet(name = "CategoryServlet", urlPatterns = {"/admin/categories"})
 public class CategoryServlet extends HttpServlet {
     private CategoryService service;
 

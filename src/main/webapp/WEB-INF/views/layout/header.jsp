@@ -50,12 +50,37 @@
         <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng</a></li>
         <c:choose>
           <c:when test="${not empty sessionScope.user}">
-            <li class="nav-item"><a class="nav-link" href="#">Xin chào, ${sessionScope.user.name}</a></li>
-            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/auth?action=logout">Đăng xuất</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Xin chào, ${sessionScope.user.name}</a>
+            </li>
+            <!-- Nếu là Admin -->
+            <c:if test="${sessionScope.role == 'ADMIN'}">
+              <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Quản trị</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/orders">Quản lý đơn hàng</a>
+              </li>
+            </c:if>
+
+            <!-- Nếu là User -->
+            <c:if test="${sessionScope.role == 'USER'}">
+              <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/orders">Đơn hàng của tôi</a>
+              </li>
+            </c:if>
+
+            <li class="nav-item">
+              <a class="nav-link" href="${pageContext.request.contextPath}/auth?action=logout">Đăng xuất</a>
+            </li>
           </c:when>
           <c:otherwise>
-            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/auth">Đăng nhập</a></li>
-            <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/auth?action=register">Đăng ký</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="${pageContext.request.contextPath}/auth">Đăng nhập</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="${pageContext.request.contextPath}/auth?action=register">Đăng ký</a>
+            </li>
           </c:otherwise>
         </c:choose>
       </ul>

@@ -17,7 +17,7 @@ import java.nio.file.*;
 import java.util.List;
 import java.util.UUID;
 
-@WebServlet(name = "ProductServlet", urlPatterns = {"/products"})
+@WebServlet(name = "ProductServlet", urlPatterns = {"/admin/products"})
 @MultipartConfig(
         fileSizeThreshold = 1024 * 1024,  // 1MB
         maxFileSize = 5 * 1024 * 1024,    // 5MB

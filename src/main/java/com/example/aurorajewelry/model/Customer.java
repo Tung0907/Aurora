@@ -5,8 +5,7 @@ public class Customer {
     private String name;
     private String email;
     private String password;
-    private int customerId;
-    public int getCustomerId() { return customerId; }
+    private String role;
 
     public Customer() {}
 
@@ -15,6 +14,14 @@ public class Customer {
         this.name = name;
         this.email = email;
         this.password = password;
+    }
+
+    public Customer(int id, String name, String email, String password, String role) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
     }
 
     // Getter & Setter
@@ -29,4 +36,7 @@ public class Customer {
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
+
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

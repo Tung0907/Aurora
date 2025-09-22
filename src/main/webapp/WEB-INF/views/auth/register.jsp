@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ include file="layout/header.jsp" %>
+<%@ include file="../layout/header.jsp" %>
 <div class="row justify-content-center">
     <div class="col-md-4">
         <h2 class="mb-3">📝 Đăng ký</h2>
-        <form method="post" action="auth">
+        <form method="post" action="">
             <input type="hidden" name="action" value="register"/>
             <div class="mb-3">
                 <label>Họ tên</label>
@@ -21,4 +21,4 @@
         </form>
     </div>
 </div>
-<%@ include file="layout/footer.jsp" %>
+<%@ include file="../layout/footer.jsp" %>

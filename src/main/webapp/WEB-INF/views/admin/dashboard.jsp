@@ -1,41 +1,61 @@
 <%@ page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ include file="../layout/header.jsp" %>
-<div class="p-5 bg-white shadow rounded text-center">
-    <h2 class="text-gradient">Bảng điều khiển quản trị</h2>
-    <p class="lead">Xin chào Admin! Hãy quản lý cửa hàng của bạn.</p>
-    <div class="row mt-4">
+
+<div class="container mt-4">
+    <h2 class="fw-bold mb-4">📊 Bảng điều khiển Admin</h2>
+
+    <!-- Thống kê nhanh -->
+    <div class="row text-center mb-4">
         <div class="col-md-3">
-            <a href="admin/products" class="card shadow-sm text-decoration-none">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <i class="fa fa-box fa-2x text-gradient"></i>
-                    <h5 class="mt-2">Sản phẩm</h5>
+                    <h4>${fn:length(products)}</h4>
+                    <p class="text-muted">Sản phẩm</p>
                 </div>
-            </a>
+            </div>
         </div>
         <div class="col-md-3">
-            <a href="admin/categories" class="card shadow-sm text-decoration-none">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <i class="fa fa-tags fa-2x text-gradient"></i>
-                    <h5 class="mt-2">Danh mục</h5>
+                    <h4>${fn:length(categories)}</h4>
+                    <p class="text-muted">Danh mục</p>
                 </div>
-            </a>
+            </div>
         </div>
         <div class="col-md-3">
-            <a href="admin/orders" class="card shadow-sm text-decoration-none">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <i class="fa fa-receipt fa-2x text-gradient"></i>
-                    <h5 class="mt-2">Đơn hàng</h5>
+                    <h4>${fn:length(orders)}</h4>
+                    <p class="text-muted">Đơn hàng</p>
                 </div>
-            </a>
+            </div>
         </div>
         <div class="col-md-3">
-            <a href="home" class="card shadow-sm text-decoration-none">
+            <div class="card shadow-sm">
                 <div class="card-body">
-                    <i class="fa fa-home fa-2x text-gradient"></i>
-                    <h5 class="mt-2">Trang khách</h5>
+                    <h4>${fn:length(customers)}</h4>
+                    <p class="text-muted">Khách hàng</p>
                 </div>
-            </a>
+            </div>
         </div>
     </div>
+
+    <!-- Menu quản trị -->
+    <div class="list-group shadow-sm">
+        <a href="${pageContext.request.contextPath}/products" class="list-group-item list-group-item-action">
+            🛍️ Quản lý sản phẩm
+        </a>
+        <a href="${pageContext.request.contextPath}/categories" class="list-group-item list-group-item-action">
+            📂 Quản lý danh mục
+        </a>
+        <a href="${pageContext.request.contextPath}/orders" class="list-group-item list-group-item-action">
+            📦 Quản lý đơn hàng
+        </a>
+        <a href="${pageContext.request.contextPath}/customers" class="list-group-item list-group-item-action">
+            👤 Quản lý khách hàng
+        </a>
+    </div>
 </div>
+
 <%@ include file="../layout/footer.jsp" %>

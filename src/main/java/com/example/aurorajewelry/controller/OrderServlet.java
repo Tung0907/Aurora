@@ -9,7 +9,7 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.*;
 
-@WebServlet(name = "OrderServlet", urlPatterns = {"/order"})
+@WebServlet(name = "OrderServlet", urlPatterns = {"/admin/orders"})
 public class OrderServlet extends HttpServlet {
     private OrderRepository orderRepo;
     private OrderDetailRepository detailRepo;
@@ -40,16 +40,13 @@ public class OrderServlet extends HttpServlet {
         }
 
         // Tạo đơn hàng
-        Order order = new Order(0, customer.getCustomerId(), new Date(), total);
+        Order order = new Order(0, customer.getId(), new Date(), total);
         orderRepo.save(order);
         for (Map.Entry<Integer, Integer> e : cart.entrySet()) {
             Product p = productRepo.findById(e.getKey());
             OrderDetail d = new OrderDetail(0, order.getId(), p.getCategoryId(), e.getValue(), p.getPrice());
             detailRepo.save(d);
         }
-
-
-
         session.removeAttribute("cart");
         resp.sendRedirect("home");
     }

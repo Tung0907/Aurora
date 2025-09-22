@@ -8,52 +8,86 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.IOException;
 
-@WebServlet(name = "AuthServlet", urlPatterns = {"/auth"})
+@WebServlet("/auth")
 public class AuthServlet extends HttpServlet {
-    private CustomerRepository repo;
+
+    private CustomerRepository customerRepository;
 
     @Override
     public void init() {
-        repo = new CustomerRepository();
+        customerRepository = new CustomerRepository();
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
-        if ("register".equals(action)) {
-            req.getRequestDispatcher("/WEB-INF/views/register.jsp").forward(req, resp);
-        } else {
-            req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
+        if (action == null || action.equals("login")) {
+            req.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(req, resp);
+        } else if (action.equals("register")) {
+            req.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(req, resp);
+        } else if (action.equals("logout")) {
+            HttpSession session = req.getSession();
+            session.invalidate();
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String action = req.getParameter("action");
-        if ("register".equals(action)) {
-            String name = req.getParameter("name");
-            String email = req.getParameter("email");
-            String pass = req.getParameter("password");
-            Customer c = new Customer(0, name, email, pass);
-            repo.save(c);
-            resp.sendRedirect("auth");
-        } else if ("login".equals(action)) {
-            String email = req.getParameter("email");
-            String pass = req.getParameter("password");
 
-            for (Customer c : repo.findAll()) {
-                if (c.getEmail().equals(email) && c.getPassword().equals(pass)) {
-                    HttpSession session = req.getSession();
-                    session.setAttribute("user", c);
-                    resp.sendRedirect("home");
-                    return;
-                }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String action = req.getParameter("action");
+
+        if ("login".equals(action)) {
+            handleLogin(req, resp);
+        } else if ("register".equals(action)) {
+            handleRegister(req, resp);
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/home");
+        }
+    }
+
+    private void handleLogin(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, ServletException {
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+
+        Customer customer = customerRepository.findByEmailAndPassword(email, password);
+
+        if (customer != null) {
+            HttpSession session = req.getSession();
+            session.setAttribute("user", customer);
+            session.setAttribute("role", customer.getRole());
+            // Điều hướng theo role
+            if ("ADMIN".equalsIgnoreCase(customer.getRole())) {
+                resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+            } else {
+                resp.sendRedirect(req.getContextPath() + "/home");
             }
-            req.setAttribute("error", "Invalid credentials");
-            req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
-        } else if ("logout".equals(action)) {
-            req.getSession().invalidate();
-            resp.sendRedirect("home");
+        } else {
+            req.setAttribute("error", "Email hoặc mật khẩu không đúng");
+            req.getRequestDispatcher("/WEB-INF/views/auth/login.jsp").forward(req, resp);
+        }
+    }
+
+    private void handleRegister(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, ServletException {
+        String name = req.getParameter("name");
+        String email = req.getParameter("email");
+        String password = req.getParameter("password");
+
+        // Mặc định role USER
+        Customer newCustomer = new Customer(0, name, email, password, "USER");
+
+        int newId = customerRepository.save(newCustomer);
+        boolean success = newId > 0;
+
+        if (success) {
+            resp.sendRedirect(req.getContextPath() + "/auth?action=login");
+        } else {
+            req.setAttribute("error", "Đăng ký thất bại, vui lòng thử lại");
+            req.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(req, resp);
         }
     }
 }
