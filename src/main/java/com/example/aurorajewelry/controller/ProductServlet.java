@@ -36,7 +36,6 @@ public class ProductServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String action = req.getParameter("action");
         if (action == null) action = "list";
-
         switch (action) {
             case "new":
                 req.setAttribute("categories", categoryService.getAll());
@@ -59,7 +58,9 @@ public class ProductServlet extends HttpServlet {
                 req.getRequestDispatcher("/WEB-INF/views/admin/product-list.jsp").forward(req, resp);
                 break;
         }
+
     }
+
 
     private String saveUploadedFile(Part filePart, HttpServletRequest req) throws IOException {
         if (filePart == null || filePart.getSize() == 0) return null;
