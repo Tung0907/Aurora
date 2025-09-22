@@ -7,7 +7,7 @@
   <div class="row">
     <div class="col-12">
       <div class="card border-0 shadow-sm">
-        <img src="${pageContext.request.contextPath}/images/banner.jpg"
+        <img src="${pageContext.request.contextPath}/images/banner1.png"
              class="card-img-top" alt="Aurora Banner">
       </div>
     </div>
@@ -26,8 +26,10 @@
                class="card-img-top" alt="${p.name}">
           <div class="card-body text-center">
             <h5 class="card-title">${p.name}</h5>
-            <p class="card-text text-muted">${p.price} VNĐ</p>
-            <a href="${pageContext.request.contextPath}/cart?action=add&id=${p.id}"
+            <p class="card-text text-muted">
+              <fmt:formatNumber value="${p.price}" type="currency" currencySymbol="₫"/>
+            </p>
+            <a href="${pageContext.request.contextPath}/cart?action=add&id=${p.productId}"
                class="btn btn-primary"><i class="fa fa-cart-plus"></i> Thêm vào giỏ</a>
           </div>
         </div>
