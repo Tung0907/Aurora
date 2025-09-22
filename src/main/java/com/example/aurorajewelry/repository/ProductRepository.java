@@ -1,5 +1,6 @@
 package com.example.aurorajewelry.repository;
 
+import com.example.aurorajewelry.config.DBConnection;
 import com.example.aurorajewelry.model.Product;
 import java.sql.*;
 import java.util.*;
@@ -8,7 +9,7 @@ public class ProductRepository {
     private Connection conn;
 
     public ProductRepository() {
-        conn = DbConnection.getConnection();
+        conn = DBConnection.getConnection();
     }
 
     public List<Product> findAll() {

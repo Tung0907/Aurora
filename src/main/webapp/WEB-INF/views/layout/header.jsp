@@ -4,6 +4,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}/home">
+    <img src="${pageContext.request.contextPath}/images/Logo1.png" alt="Aurora Logo" style="height:40px; margin-right:8px;">
+    Aurora Jewelry
+  </a>
   <title>Aurora Jewelry</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">

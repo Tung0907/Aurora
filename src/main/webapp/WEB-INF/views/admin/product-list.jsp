@@ -11,6 +11,7 @@
         </thead>
         <tbody>
         <c:forEach var="p" items="${products}">
+            <img src="${pageContext.request.contextPath}/images/${product.image}" alt="${product.name}" style="max-width:150px;">
             <tr>
                 <td>
                     <c:if test="${not empty p.image}">

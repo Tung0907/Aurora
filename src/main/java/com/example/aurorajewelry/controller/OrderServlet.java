@@ -45,7 +45,7 @@ public class OrderServlet extends HttpServlet {
 
         for (Map.Entry<Integer, Integer> e : cart.entrySet()) {
             Product p = productRepo.findById(e.getKey());
-            OrderDetail d = new OrderDetail(0, order.getId(), p.getId(), e.getValue(), p.getPrice());
+            OrderDetail d = new OrderDetail(0, order.getId(), p.getProductId(), e.getValue(), p.getPrice());
             detailRepo.save(d);
         }
 

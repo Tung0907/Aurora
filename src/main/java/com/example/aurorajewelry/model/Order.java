@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Order {
     private int id;
-    private Integer customerId; // đổi từ int -> Integer
+    private Integer customerId; // wrapper cho phép null
     private Date orderDate;
     private double total;
 
@@ -17,7 +17,6 @@ public class Order {
         this.total = total;
     }
 
-    // Getter & Setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
