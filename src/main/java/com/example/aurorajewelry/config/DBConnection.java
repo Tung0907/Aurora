@@ -19,4 +19,12 @@ public class DBConnection {
             throw new RuntimeException("Cannot get DB connection", e);
         }
     }
+    static {
+        try {
+            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

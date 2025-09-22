@@ -18,11 +18,11 @@
         <tbody>
         <c:forEach var="c" items="${categories}">
             <tr>
-                <td>${c.categoryId}</td>
+                <td>${c.id}</td>
                 <td>${c.name}</td>
                 <td>
-                    <a href="category?action=edit&id=${c.categoryId}" class="btn btn-sm btn-warning">Edit</a>
-                    <a href="category?action=delete&id=${c.categoryId}" class="btn btn-sm btn-danger"
+                    <a href="category?action=edit&id=${c.id}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="category?action=delete&id=${c.id}" class="btn btn-sm btn-danger"
                        onclick="return confirm('Are you sure?')">Delete</a>
                 </td>
             </tr>
