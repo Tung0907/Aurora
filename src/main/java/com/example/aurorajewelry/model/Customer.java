@@ -5,24 +5,34 @@ public class Customer {
     private String name;
     private String email;
     private String password;
-    private String role; // "ADMIN" hoặc "USER"
+    private String role;
+    private String phone;   // thêm mới
+    private String address; // thêm mới
 
-    public Customer() {}
-
-    // constructor mặc định (USER)
-    public Customer(int id, String name, String email, String password) {
-        this(id, name, email, password, "USER");
+    public Customer() {
     }
 
-    public Customer(int id, String name, String email, String password, String role) {
+    // Constructor đầy đủ
+    public Customer(int id, String name, String email, String password,
+                    String role, String phone, String address) {
         this.id = id;
+        this.name = name;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.phone = phone;
+        this.address = address;
+    }
+
+    // Constructor đơn giản (khi đăng ký mới chỉ có name, email, password)
+    public Customer(String name, String email, String password, String role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    // getters / setters
+    // getter/setter
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -38,8 +48,9 @@ public class Customer {
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
 
-    @Override
-    public String toString() {
-        return "Customer{id=" + id + ", name='" + name + "', email='" + email + "', role='" + role + "'}";
-    }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 }

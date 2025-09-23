@@ -23,18 +23,24 @@ public class OrderServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         String uri = req.getRequestURI();
         HttpSession session = req.getSession();
+        Customer customer = (Customer) session.getAttribute("user");
 
         if (uri.contains("/admin/orders")) {
-            // Admin xem tất cả đơn
+            // ✅ Chỉ admin mới được xem tất cả đơn
+            if (customer == null || !"ADMIN".equals(customer.getRole())) {
+                resp.sendRedirect(req.getContextPath() + "/login");
+                return;
+            }
             List<Order> orders = orderRepo.findAll();
             req.setAttribute("orders", orders);
             req.getRequestDispatcher("/WEB-INF/views/admin/order-list.jsp").forward(req, resp);
+
         } else if (uri.contains("/orders")) {
-            // Khách hàng chỉ xem đơn của mình
-            Customer customer = (Customer) session.getAttribute("user");
+            // ✅ Khách hàng xem đơn riêng của mình
             if (customer == null) {
                 resp.sendRedirect(req.getContextPath() + "/login");
                 return;
@@ -46,7 +52,8 @@ public class OrderServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         HttpSession session = req.getSession();
         Customer customer = (Customer) session.getAttribute("user");
         Map<Integer, Integer> cart = (Map<Integer, Integer>) session.getAttribute("cart");
@@ -62,9 +69,9 @@ public class OrderServlet extends HttpServlet {
             total += p.getPrice() * e.getValue();
         }
 
-        // Tạo đơn hàng
+        // ✅ Tạo đơn hàng
         Order order = new Order(0, customer.getId(), new Date(), total);
-        int orderId = orderRepo.save(order);  // nhớ cho save() trả về id
+        int orderId = orderRepo.save(order);  // save() nên trả về id đơn
 
         for (Map.Entry<Integer, Integer> e : cart.entrySet()) {
             Product p = productRepo.findById(e.getKey());

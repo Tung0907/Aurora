@@ -78,7 +78,7 @@ public class AuthServlet extends HttpServlet {
         String password = req.getParameter("password");
 
         // tạo user mặc định role = USER
-        Customer newCustomer = new Customer(0, name, email, password, "USER");
+        Customer newCustomer = new Customer(name, email, password, "USER");
 
         int newId = customerRepository.save(newCustomer);
         boolean success = newId > 0;

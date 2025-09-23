@@ -14,10 +14,36 @@ public class CustomerRepository {
         conn = DBConnection.getConnection();
     }
 
+    // Lấy tất cả khách hàng
     public List<Customer> findAll() {
         List<Customer> list = new ArrayList<>();
         try {
             String sql = "SELECT * FROM Customer";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                Customer c = new Customer(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("phone"),
+                        rs.getString("address")
+                );
+                list.add(c);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    // Lấy tất cả user (loại admin)
+    public List<Customer> findAllUsers() {
+        List<Customer> list = new ArrayList<>();
+        try {
+            String sql = "SELECT * FROM Customer WHERE role = 'USER'";
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -26,7 +52,9 @@ public class CustomerRepository {
                         rs.getString("name"),
                         rs.getString("email"),
                         rs.getString("password"),
-                        rs.getString("role")
+                        rs.getString("role"),
+                        rs.getString("phone"),
+                        rs.getString("address")
                 ));
             }
         } catch (Exception e) {
@@ -35,19 +63,22 @@ public class CustomerRepository {
         return list;
     }
 
+    // Tìm theo ID
     public Customer findById(int id) {
-        String sql = "SELECT id, name, email, password, role FROM Customer WHERE id = ?";
+        String sql = "SELECT * FROM Customer WHERE id = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Customer c = new Customer();
-                    c.setId(rs.getInt("id"));
-                    c.setName(rs.getString("name"));
-                    c.setEmail(rs.getString("email"));
-                    c.setPassword(rs.getString("password"));
-                    c.setRole(rs.getString("role"));
-                    return c;
+                    return new Customer(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("role"),
+                            rs.getString("phone"),
+                            rs.getString("address")
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -56,20 +87,22 @@ public class CustomerRepository {
         return null;
     }
 
-    // tiện: tìm theo email (dùng cho login / register check)
+    // Tìm theo email
     public Customer findByEmail(String email) {
-        String sql = "SELECT id, name, email, password, role FROM Customer WHERE email = ?";
+        String sql = "SELECT * FROM Customer WHERE email = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    Customer c = new Customer();
-                    c.setId(rs.getInt("id"));
-                    c.setName(rs.getString("name"));
-                    c.setEmail(rs.getString("email"));
-                    c.setPassword(rs.getString("password"));
-                    c.setRole(rs.getString("role"));
-                    return c;
+                    return new Customer(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getString("role"),
+                            rs.getString("phone"),
+                            rs.getString("address")
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -78,15 +111,17 @@ public class CustomerRepository {
         return null;
     }
 
-    // save (trả về generated id)
+    // Thêm mới (trả về id)
     public int save(Customer c) {
         try {
-            String sql = "INSERT INTO Customer(name, email, password, role) VALUES(?,?,?,?)";
+            String sql = "INSERT INTO Customer(name, email, password, role, phone, address) VALUES(?,?,?,?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, c.getName());
             ps.setString(2, c.getEmail());
             ps.setString(3, c.getPassword());
             ps.setString(4, c.getRole() != null ? c.getRole() : "USER");
+            ps.setString(5, c.getPhone());
+            ps.setString(6, c.getAddress());
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
@@ -104,20 +139,24 @@ public class CustomerRepository {
         return -1;
     }
 
+    // Cập nhật
     public void update(Customer c) {
-        String sql = "UPDATE Customer SET name=?, email=?, password=?, role=? WHERE id=?";
+        String sql = "UPDATE Customer SET name=?, email=?, password=?, role=?, phone=?, address=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, c.getName());
             ps.setString(2, c.getEmail());
             ps.setString(3, c.getPassword());
             ps.setString(4, c.getRole() == null ? "USER" : c.getRole());
-            ps.setInt(5, c.getId());
+            ps.setString(5, c.getPhone());
+            ps.setString(6, c.getAddress());
+            ps.setInt(7, c.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    // Xóa
     public void delete(int id) {
         String sql = "DELETE FROM Customer WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -127,6 +166,8 @@ public class CustomerRepository {
             e.printStackTrace();
         }
     }
+
+    // Login
     public Customer findByEmailAndPassword(String email, String password) {
         try {
             String sql = "SELECT * FROM Customer WHERE email = ? AND password = ?";
@@ -135,14 +176,15 @@ public class CustomerRepository {
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("name");
-                String em = rs.getString("email");
-                String pwd = rs.getString("password");
-                String role = null;
-                try { role = rs.getString("role"); } catch (SQLException e) { /* nếu cột không tồn tại */ }
-                if (role == null) role = "USER";
-                Customer c = new Customer(id, name, em, pwd, role);
+                Customer c = new Customer(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("role"),
+                        rs.getString("phone"),
+                        rs.getString("address")
+                );
                 rs.close();
                 ps.close();
                 return c;
@@ -154,6 +196,4 @@ public class CustomerRepository {
         }
         return null;
     }
-
-
 }
