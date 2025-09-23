@@ -45,16 +45,16 @@
 
     <!-- Menu quản trị -->
     <div class="list-group shadow-sm">
-        <a href="${pageContext.request.contextPath}/products" class="list-group-item list-group-item-action">
+        <a href="${pageContext.request.contextPath}/admin/products" class="list-group-item list-group-item-action">
             🛍️ Quản lý sản phẩm
         </a>
-        <a href="${pageContext.request.contextPath}/categories" class="list-group-item list-group-item-action">
+        <a href="${pageContext.request.contextPath}/admin/categories" class="list-group-item list-group-item-action">
             📂 Quản lý danh mục
         </a>
-        <a href="${pageContext.request.contextPath}/orders" class="list-group-item list-group-item-action">
+        <a href="${pageContext.request.contextPath}/admin/orders" class="list-group-item list-group-item-action">
             📦 Quản lý đơn hàng
         </a>
-        <a href="${pageContext.request.contextPath}/customers" class="list-group-item list-group-item-action">
+        <a href="${pageContext.request.contextPath}/admin/customers" class="list-group-item list-group-item-action">
             👤 Quản lý khách hàng
         </a>
     </div>

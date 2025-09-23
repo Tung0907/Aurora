@@ -52,7 +52,7 @@ public class ProductServlet extends HttpServlet {
                 break;
             case "delete":
                 productService.delete(Integer.parseInt(req.getParameter("id")));
-                resp.sendRedirect(req.getContextPath() + "/products");
+                resp.sendRedirect(req.getContextPath() + "/admin/products");
                 break;
             default:
                 List<Product> list = productService.getAll();
@@ -127,6 +127,6 @@ public class ProductServlet extends HttpServlet {
             productService.update(p);
         }
 
-        resp.sendRedirect(req.getContextPath() + "/products");
+        resp.sendRedirect(req.getContextPath() + "/admin/products");
     }
 }

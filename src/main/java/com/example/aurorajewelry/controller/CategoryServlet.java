@@ -36,7 +36,7 @@ public class CategoryServlet extends HttpServlet {
                 break;
             case "delete":
                 service.delete(Integer.parseInt(req.getParameter("id")));
-                resp.sendRedirect(req.getContextPath() + "/categories");
+                resp.sendRedirect(req.getContextPath() + "/admin/categories");
                 break;
             default:
                 List<Category> list = service.getAll();
@@ -56,6 +56,6 @@ public class CategoryServlet extends HttpServlet {
         if (id == null || id.isEmpty()) service.add(c);
         else service.update(c);
 
-        resp.sendRedirect(req.getContextPath() + "/categories");
+        resp.sendRedirect(req.getContextPath() + "/admin/categories");
     }
 }
