@@ -52,16 +52,16 @@
             <!-- Nếu là Admin -->
             <c:if test="${sessionScope.role eq 'ADMIN'}">
               <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/products">Sản phẩm</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/products">Sản phẩm</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/categories">Danh mục</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/categories">Danh mục</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Quản trị</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="${pageContext.request.contextPath}/orders">Quản lý đơn hàng</a>
+                <a class="nav-link" href="${pageContext.request.contextPath}/admin/orders">Quản lý đơn hàng</a>
               </li>
             </c:if>
 
