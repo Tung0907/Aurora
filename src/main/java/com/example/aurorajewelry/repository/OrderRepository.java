@@ -57,13 +57,20 @@ public class OrderRepository {
         try {
             String sql = "INSERT INTO [Order](customerId, orderDate, total) VALUES(?,?,?)";
             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-            if (order.getCustomerId() != null) ps.setInt(1, order.getCustomerId()); else ps.setNull(1, Types.INTEGER);
-            ps.setTimestamp(2, new java.sql.Timestamp(order.getOrderDate().getTime()));
+
+            if (order.getCustomerId() != null) {
+                ps.setInt(1, order.getCustomerId());
+            } else {
+                ps.setNull(1, Types.INTEGER);
+            }
+            ps.setTimestamp(2, new Timestamp(order.getOrderDate().getTime()));
             ps.setDouble(3, order.getTotal());
+
             ps.executeUpdate();
             ResultSet rs = ps.getGeneratedKeys();
             if (rs.next()) {
                 int id = rs.getInt(1);
+                order.setId(id); // gán lại id cho đối tượng order
                 rs.close();
                 ps.close();
                 return id;
@@ -74,6 +81,8 @@ public class OrderRepository {
         }
         return -1;
     }
+
+
     public void update(Order o) {
         try {
             String sql = "UPDATE [Order] SET customerId=?, orderDate=?, total=? WHERE id=?";

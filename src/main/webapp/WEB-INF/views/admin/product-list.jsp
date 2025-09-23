@@ -5,7 +5,7 @@
 
 <div class="container mt-4">
     <h2 class="mb-3 fw-bold">Danh sách sản phẩm</h2>
-    <a class="btn btn-primary mb-3" href="${pageContext.request.contextPath}/products?action=new">
+    <a class="btn btn-primary mb-3" href="${pageContext.request.contextPath}/admin/products?action=new">
         ➕ Thêm sản phẩm
     </a>
 
@@ -51,11 +51,11 @@
 
                 <td>
                     <a class="btn btn-sm btn-warning"
-                       href="${pageContext.request.contextPath}/products?action=edit&id=${p.id}">
+                       href="${pageContext.request.contextPath}/admin/products?action=edit&id=${p.id}">
                         ✏ Edit
                     </a>
                     <a class="btn btn-sm btn-danger"
-                       href="${pageContext.request.contextPath}/products?action=delete&id=${p.id}"
+                       href="${pageContext.request.contextPath}/admin/products?action=delete&id=${p.id}"
                        onclick="return confirm('Bạn có chắc muốn xóa?')">
                         🗑 Delete
                     </a>
