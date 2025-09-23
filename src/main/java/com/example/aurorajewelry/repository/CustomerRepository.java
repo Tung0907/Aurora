@@ -80,21 +80,25 @@ public class CustomerRepository {
 
     // save (trả về generated id)
     public int save(Customer c) {
-        String sql = "INSERT INTO Customer(name, email, password, role) VALUES(?,?,?,?)";
-        try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try {
+            String sql = "INSERT INTO Customer(name, email, password, role) VALUES(?,?,?,?)";
+            PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, c.getName());
             ps.setString(2, c.getEmail());
             ps.setString(3, c.getPassword());
-            ps.setString(4, c.getRole() == null ? "USER" : c.getRole());
+            ps.setString(4, c.getRole() != null ? c.getRole() : "USER");
             ps.executeUpdate();
-            try (ResultSet rs = ps.getGeneratedKeys()) {
-                if (rs.next()) {
-                    int id = rs.getInt(1);
-                    c.setId(id);
-                    return id;
-                }
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                int id = rs.getInt(1);
+                rs.close();
+                ps.close();
+                return id;
             }
-        } catch (SQLException e) {
+            ps.close();
+        } catch (SQLIntegrityConstraintViolationException sicv) {
+            System.err.println("Email đã tồn tại: " + c.getEmail());
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return -1;
@@ -125,26 +129,31 @@ public class CustomerRepository {
     }
     public Customer findByEmailAndPassword(String email, String password) {
         try {
-            String sql = "SELECT * FROM Customer WHERE email=? AND password=?";
+            String sql = "SELECT * FROM Customer WHERE email = ? AND password = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                return new Customer(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("role")
-                );
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                String em = rs.getString("email");
+                String pwd = rs.getString("password");
+                String role = null;
+                try { role = rs.getString("role"); } catch (SQLException e) { /* nếu cột không tồn tại */ }
+                if (role == null) role = "USER";
+                Customer c = new Customer(id, name, em, pwd, role);
+                rs.close();
+                ps.close();
+                return c;
             }
+            rs.close();
+            ps.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
-
 
 
 }

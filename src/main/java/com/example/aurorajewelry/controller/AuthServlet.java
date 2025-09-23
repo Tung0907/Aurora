@@ -58,8 +58,8 @@ public class AuthServlet extends HttpServlet {
         if (customer != null) {
             HttpSession session = req.getSession();
             session.setAttribute("user", customer);
-            session.setAttribute("role", customer.getRole());
-            // Điều hướng theo role
+            session.setAttribute("role", customer.getRole()); // <-- quan trọng
+
             if ("ADMIN".equalsIgnoreCase(customer.getRole())) {
                 resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
             } else {
@@ -77,7 +77,7 @@ public class AuthServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        // Mặc định role USER
+        // tạo user mặc định role = USER
         Customer newCustomer = new Customer(0, name, email, password, "USER");
 
         int newId = customerRepository.save(newCustomer);
@@ -86,7 +86,7 @@ public class AuthServlet extends HttpServlet {
         if (success) {
             resp.sendRedirect(req.getContextPath() + "/auth?action=login");
         } else {
-            req.setAttribute("error", "Đăng ký thất bại, vui lòng thử lại");
+            req.setAttribute("error", "Đăng ký thất bại, vui lòng thử lại (email có thể bị trùng)");
             req.getRequestDispatcher("/WEB-INF/views/auth/register.jsp").forward(req, resp);
         }
     }

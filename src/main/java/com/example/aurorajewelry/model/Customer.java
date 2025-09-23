@@ -5,15 +5,13 @@ public class Customer {
     private String name;
     private String email;
     private String password;
-    private String role;
+    private String role; // "ADMIN" hoặc "USER"
 
     public Customer() {}
 
+    // constructor mặc định (USER)
     public Customer(int id, String name, String email, String password) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.password = password;
+        this(id, name, email, password, "USER");
     }
 
     public Customer(int id, String name, String email, String password, String role) {
@@ -24,7 +22,7 @@ public class Customer {
         this.role = role;
     }
 
-    // Getter & Setter
+    // getters / setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
 
@@ -39,4 +37,9 @@ public class Customer {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    @Override
+    public String toString() {
+        return "Customer{id=" + id + ", name='" + name + "', email='" + email + "', role='" + role + "'}";
+    }
 }

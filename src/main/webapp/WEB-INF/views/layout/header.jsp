@@ -4,10 +4,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <a class="navbar-brand d-flex align-items-center" href="${pageContext.request.contextPath}/home">
-    <img src="${pageContext.request.contextPath}/images/Logo1.png" alt="Aurora Logo" style="height:40px; margin-right:8px;">
-    Aurora Jewelry
-  </a>
   <title>Aurora Jewelry</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -45,16 +41,22 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/home">Trang chủ</a></li>
-        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/products">Sản phẩm</a></li>
-        <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/categories">Danh mục</a></li>
         <li class="nav-item"><a class="nav-link" href="${pageContext.request.contextPath}/cart"><i class="fa-solid fa-cart-shopping"></i> Giỏ hàng</a></li>
+
         <c:choose>
           <c:when test="${not empty sessionScope.user}">
             <li class="nav-item">
               <a class="nav-link" href="#">Xin chào, ${sessionScope.user.name}</a>
             </li>
+
             <!-- Nếu là Admin -->
-            <c:if test="${sessionScope.role == 'ADMIN'}">
+            <c:if test="${sessionScope.role eq 'ADMIN'}">
+              <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/products">Sản phẩm</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="${pageContext.request.contextPath}/categories">Danh mục</a>
+              </li>
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/admin/dashboard">Quản trị</a>
               </li>
@@ -64,7 +66,7 @@
             </c:if>
 
             <!-- Nếu là User -->
-            <c:if test="${sessionScope.role == 'USER'}">
+            <c:if test="${sessionScope.role eq 'USER'}">
               <li class="nav-item">
                 <a class="nav-link" href="${pageContext.request.contextPath}/orders">Đơn hàng của tôi</a>
               </li>
@@ -74,9 +76,10 @@
               <a class="nav-link" href="${pageContext.request.contextPath}/auth?action=logout">Đăng xuất</a>
             </li>
           </c:when>
+
           <c:otherwise>
             <li class="nav-item">
-              <a class="nav-link" href="${pageContext.request.contextPath}/auth">Đăng nhập</a>
+              <a class="nav-link" href="${pageContext.request.contextPath}/auth?action=login">Đăng nhập</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="${pageContext.request.contextPath}/auth?action=register">Đăng ký</a>
