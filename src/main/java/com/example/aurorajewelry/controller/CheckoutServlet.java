@@ -1,8 +1,12 @@
 package com.example.aurorajewelry.controller;
 
+import com.example.aurorajewelry.model.Customer;
 import com.example.aurorajewelry.model.Order;
+import com.example.aurorajewelry.model.Product;
+import com.example.aurorajewelry.repository.CustomerRepository;
 import com.example.aurorajewelry.repository.OrderRepository;
 import com.example.aurorajewelry.repository.OrderDetailRepository;
+import com.example.aurorajewelry.repository.ProductRepository;
 import com.example.aurorajewelry.service.impl.CartService;
 import com.example.aurorajewelry.service.impl.CartService.Item;
 
@@ -17,16 +21,33 @@ import java.util.Map;
 public class CheckoutServlet extends HttpServlet {
     private OrderRepository orderRepo;
     private OrderDetailRepository orderDetailRepo;
+    private ProductRepository productRepo;
+    private CustomerRepository customerRepo;
 
     @Override
     public void init() {
         orderRepo = new OrderRepository();
         orderDetailRepo = new OrderDetailRepository();
+        productRepo = new ProductRepository();
+        customerRepo = new CustomerRepository();
     }
 
     // show form
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        HttpSession session = req.getSession();
+
+        // lấy user id nếu login (tùy model user)
+        Integer customerId = null;
+        Object userObj = session.getAttribute("user");
+        if (userObj != null) {
+            try {
+                java.lang.reflect.Method m = userObj.getClass().getMethod("getId");
+                Object val = m.invoke(userObj);
+                if (val instanceof Number) customerId = ((Number) val).intValue();
+            } catch (Exception ignored) {}
+        }
+        req.setAttribute("customer", customerRepo.findById(customerId));
         req.getRequestDispatcher("/WEB-INF/views/checkout.jsp").forward(req, resp);
     }
 
@@ -55,6 +76,12 @@ public class CheckoutServlet extends HttpServlet {
         String phone = req.getParameter("phone");
         String address = req.getParameter("address");
 
+        Customer customer = customerRepo.findById(customerId);
+        customer.setName(name);
+        customer.setPhone(phone);
+        customer.setAddress(address);
+        customerRepo.update(customer);
+
         Order order = new Order();
         order.setCustomerId(customerId);
         order.setOrderDate(new Date());
@@ -71,6 +98,12 @@ public class CheckoutServlet extends HttpServlet {
                     it.getQuantity(),
                     it.getProduct().getPrice()
             );
+
+
+            // cập nhật số lượng
+            Product oldprod = productRepo.findById(it.getProduct().getId());
+            oldprod.setStock(oldprod.getStock() - it.getQuantity());
+            productRepo.update(oldprod);
         }
 
 

@@ -11,6 +11,16 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
 
     @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        // Nếu không cần init gì đặc biệt thì để trống
+    }
+
+    @Override
+    public void destroy() {
+        // Nếu không cần cleanup thì để trống
+    }
+
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 

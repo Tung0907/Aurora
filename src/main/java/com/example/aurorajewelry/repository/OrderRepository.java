@@ -99,7 +99,7 @@ public class OrderRepository {
     }
     public List<Order> findByCustomerId(int customerId) {
         List<Order> list = new ArrayList<>();
-        String sql = "SELECT * FROM orders WHERE customer_id = ? ORDER BY order_date DESC";
+        String sql = "SELECT * FROM [Order] WHERE customerId = ? ORDER BY orderDate DESC";
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, customerId);
@@ -107,8 +107,8 @@ public class OrderRepository {
             while (rs.next()) {
                 Order o = new Order();
                 o.setId(rs.getInt("id"));
-                o.setCustomerId(rs.getInt("customer_id"));
-                o.setOrderDate(rs.getTimestamp("order_date"));
+                o.setCustomerId(rs.getInt("customerId"));
+                o.setOrderDate(rs.getTimestamp("orderDate"));
                 o.setTotal(rs.getDouble("total"));
                 list.add(o);
             }

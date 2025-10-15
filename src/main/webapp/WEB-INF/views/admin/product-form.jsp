@@ -5,7 +5,7 @@
 
 <div class="container mt-4">
   <h3><c:if test="${empty product}">Thêm</c:if><c:if test="${not empty product}">Chỉnh sửa</c:if> sản phẩm</h3>
-  <form action="${pageContext.request.contextPath}/products" method="post" enctype="multipart/form-data">
+  <form action="${pageContext.request.contextPath}/admin/products" method="post" enctype="multipart/form-data">
     <input type="hidden" name="id" value="${product != null ? product.id : ''}" />
     <div class="mb-3">
       <label class="form-label">Tên</label>
@@ -48,7 +48,7 @@
     </div>
 
     <button class="btn btn-primary" type="submit">Lưu</button>
-    <a href="${pageContext.request.contextPath}/products" class="btn btn-secondary">Hủy</a>
+    <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-secondary">Hủy</a>
   </form>
 </div>
 
